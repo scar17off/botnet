@@ -35,7 +35,6 @@ function getConsoleSize() {
     const ipWidth = Math.max(15, Math.floor(tableWidth / 3));
     const sidWidth = Math.max(20, tableWidth - idWidth - ipWidth);
   
-    console.log('Botnet zombies:');
     console.log(`┏${'━'.repeat(idWidth)}┳${'━'.repeat(ipWidth)}┳${'━'.repeat(sidWidth)}┓`);
     console.log(`┃${'ID'.padStart((idWidth + 4) / 2).padEnd(idWidth)}┃${'IP'.padStart((ipWidth + 4) / 2).padEnd(ipWidth)}┃${'SID'.padStart((sidWidth + 4) / 2).padEnd(sidWidth)}┃`);
     console.log(`┣${'━'.repeat(idWidth)}╋${'━'.repeat(ipWidth)}╋${'━'.repeat(sidWidth)}┫`);
