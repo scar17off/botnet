@@ -87,7 +87,6 @@
 
 	socket.on("send", (data) => {
 		if(ws.readyState == 1) ws.send(data);
-		console.log(data);
 	});
 
 	socket.on("close", () => {
